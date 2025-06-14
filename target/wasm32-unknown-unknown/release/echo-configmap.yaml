@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+  app.py: |
+    from flask import Flask, jsonify
+    app = Flask(__name__)
+
+    @app.route("/")
+    def index():
+        return jsonify({
+            "status": "ok",
+            "message": "Hi KubeCon Japan! This is a response from the API Server"
+        })
+
+    if __name__ == "__main__":
+        app.run(host="0.0.0.0", port=8081)
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"app.py":"from flask import Flask, jsonify\napp = Flask(__name__)\n\n@app.route(\"/\")\ndef index():\n    return jsonify({\n        \"status\": \"ok\",\n        \"message\": \"Hi KubeCon Japan! This is a response from the API Server\"\n    })\n\nif __name__ == \"__main__\":\n    app.run(host=\"0.0.0.0\", port=8081)\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"echo-api","namespace":"default"}}
+  name: echo-api
+  namespace: default
+

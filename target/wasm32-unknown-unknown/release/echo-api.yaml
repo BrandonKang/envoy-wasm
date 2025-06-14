@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echo-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-api
+  template:
+    metadata:
+      labels:
+        app: echo-api
+    spec:
+      containers:
+      - args:
+        - pip install flask && python3 /app/app.py
+        command:
+        - sh
+        - -c
+        image: python:3.9-slim
+        imagePullPolicy: IfNotPresent
+        name: echo
+        ports:
+        - containerPort: 8081
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /app
+          name: app-code
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: echo-api
+        name: app-code
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2025-06-02T01:30:07Z"
+    lastUpdateTime: "2025-06-02T01:30:07Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2025-06-02T01:30:06Z"
+    lastUpdateTime: "2025-06-02T01:30:07Z"
+    message: ReplicaSet "echo-api-7849fddd6c" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
